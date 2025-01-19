@@ -236,6 +236,7 @@ class KitchenEnv(GoalEnv, EzPickle):
         terminate_on_tasks_completed: bool = True,
         remove_task_when_completed: bool = True,
         object_noise_ratio: float = 0.0005,
+        robot_init_qpos_random_ratio: float = 0.0005,
         **kwargs,
     ):
         self.robot_env = FrankaRobot(
@@ -276,6 +277,12 @@ class KitchenEnv(GoalEnv, EzPickle):
                 -6.62095997e-03,
                 -2.68278933e-04,
             ]
+        )
+
+        self.robot_env.init_qpos += (
+            robot_init_qpos_random_ratio
+            * self.robot_env.robot_pos_noise_amp[8:]
+            * self.robot_env.np_random.uniform(low=-1.0, high=1.0, size=self.robot_env.init_qpos.shape)
         )
 
         self.model = self.robot_env.model
