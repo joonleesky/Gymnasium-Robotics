@@ -77,6 +77,7 @@ class FrankaRobot(MujocoEnv):
 
         self.init_qpos = self.data.qpos
         self.init_qvel = self.data.qvel
+        self.init_qpos_random_ratio = 0.0
 
         self.act_mid = np.zeros(9)
         self.act_rng = np.ones(9) * 2
@@ -133,6 +134,14 @@ class FrankaRobot(MujocoEnv):
     def reset_model(self):
         qpos = self.init_qpos
         qvel = self.init_qvel
+
+        qpos_noise = (
+            self.init_qpos_random_ratio
+            * self.robot_pos_noise_amp[:9]
+            * self.np_random.uniform(low=-1.0, high=1.0, size=self.init_qpos[:9].shape)
+        )
+        qpos[:9] += qpos_noise
+        
         self.set_state(qpos, qvel)
         obs = self._get_obs()
 
