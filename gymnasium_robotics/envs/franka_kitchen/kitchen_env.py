@@ -279,11 +279,7 @@ class KitchenEnv(GoalEnv, EzPickle):
             ]
         )
 
-        self.robot_env.init_qpos[:9] += (
-            robot_init_qpos_random_ratio
-            * self.robot_env.robot_pos_noise_amp[:9]
-            * self.robot_env.np_random.uniform(low=-1.0, high=1.0, size=self.robot_env.init_qpos[:9].shape)
-        )
+        self.robot_env.init_qpos_random_ratio = robot_init_qpos_random_ratio
 
         self.model = self.robot_env.model
         self.data = self.robot_env.data
